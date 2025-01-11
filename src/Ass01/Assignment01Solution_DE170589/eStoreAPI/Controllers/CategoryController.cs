@@ -25,6 +25,7 @@ namespace eStoreAPI.Controllers
         [HttpPost]
         public ActionResult CreateCategory([FromBody] CategoryDTO cate)
         {
+            // Mapster
             var dto = cate.Adapt<Category>();
             _catetoryRepository.AddCategory(dto);
             return NoContent();
