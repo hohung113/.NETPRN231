@@ -3,6 +3,7 @@ using BusinessObject.Entity;
 using DataAccess.Repository;
 using eStoreAPI.Dtos;
 using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,6 +11,7 @@ namespace eStoreAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CategoryController : ControllerBase
     {
         private ICatetoryRepository _catetoryRepository = new CategoryRepository();

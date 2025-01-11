@@ -80,7 +80,7 @@ namespace eStoreAPI
             }
 
             app.UseHttpsRedirection();
-            app.UseMiddleware<UserMiddlleware>();
+            app.UseMiddleware<UserMiddleware>();
             app.UseAuthorization();
 
 
