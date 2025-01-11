@@ -1,0 +1,41 @@
+# Ignore build outputs
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Rider and VS Code specific files
+.idea/
+.vscode/
+
+# Ignore temporary files
+*.tmp
+*.temp
+
+# Ignore NuGet packages (optional, if you want to exclude downloaded packages)
+*.nupkg
+packages/
+
+# Ignore publish outputs
+publish/
+
+# Ignore global Visual Studio folders
+.vs/
+
+# Ignore Recycle Bin files
+$RECYCLE.BIN/
+
+# Ignore debug and release folders
+**/bin/
+**/obj/
