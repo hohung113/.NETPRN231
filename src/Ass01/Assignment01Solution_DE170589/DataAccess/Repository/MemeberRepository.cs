@@ -1,4 +1,5 @@
-﻿using BusinessObject.Entity;
+﻿using BusinessObject;
+using BusinessObject.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,31 +10,42 @@ namespace DataAccess.Repository
 {
     public class MemeberRepository : IMemberRepository
     {
-        public Member CurrentMember => throw new NotImplementedException();
-
+        private bool _isAdmin;
         public void AddMemeber(Member member)
         {
-            throw new NotImplementedException();
+            MemberDAO.Instance.AddMember(member);
         }
 
         public bool IsAdmin()
         {
-            throw new NotImplementedException();
+            return _isAdmin;
         }
 
-        public bool IsLoggedIn()
+        public  bool Login(string email, string password)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> Login(string email, string password)
-        {
-            throw new NotImplementedException();
+            bool result = false;
+            var member = MemberDAO.Instance.GetMemberByEmail(email);
+            if (member != null && member.Password.Equals(password))
+            {
+                result = true;
+            }
+            return result;
         }
 
         public bool LoginAdmin(string username, string password)
         {
-            throw new NotImplementedException();
+            bool result = false;
+            if (username.Trim().Equals(Helper.GetString("EmailAdmin")) && password.Equals(Helper.GetString("PassAdmin")))
+            {
+                result = true;
+                this._isAdmin = true;
+            }
+            else
+            {
+                this._isAdmin = false;
+            }
+
+            return result;
         }
 
         public void Logout()
@@ -43,7 +55,7 @@ namespace DataAccess.Repository
 
         public void UpdateMember(Member member)
         {
-            throw new NotImplementedException();
+            MemberDAO.Instance.UpdateMember(member);
         }
     }
 }

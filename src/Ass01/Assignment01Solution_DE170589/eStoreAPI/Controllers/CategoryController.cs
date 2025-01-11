@@ -1,6 +1,8 @@
 ﻿using BusinessObject.Enitty;
 using BusinessObject.Entity;
 using DataAccess.Repository;
+using eStoreAPI.Dtos;
+using Mapster;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,12 +16,17 @@ namespace eStoreAPI.Controllers
         [HttpGet]
         public ActionResult<List<Category>> GetCategories()
         {
-            return _catetoryRepository.GetCategories();
+            return _catetoryRepository.GetCategories().Select( x => new Category
+            {
+                CategoryId = x.CategoryId,
+                CategoryName = x.CategoryName,
+            }).ToList();
         }
         [HttpPost]
-        public ActionResult CreateCategory([FromBody] Category cate)
+        public ActionResult CreateCategory([FromBody] CategoryDTO cate)
         {
-            _catetoryRepository.AddCategory(cate);
+            var dto = cate.Adapt<Category>();
+            _catetoryRepository.AddCategory(dto);
             return NoContent();
         }
     }
