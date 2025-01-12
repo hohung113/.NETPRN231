@@ -23,7 +23,11 @@ namespace eStoreAPI.Controllers
         {
             return repository.GetProductByName(text);
         }
-
+        [HttpGet("range")]
+        public ActionResult<IEnumerable<Product>> GetProductByRange(decimal minPrice, decimal maxPrice)
+        {
+            return repository.GetProductByPriceRange(minPrice,maxPrice).ToList();
+        }
         [HttpPost]
         public IActionResult CreateProduct(ProductDTO p)
         {
@@ -32,7 +36,7 @@ namespace eStoreAPI.Controllers
             return NoContent();
         }
 
-        [HttpDelete("id")]
+        [HttpDelete("{id}")]
         public IActionResult DeleteProduct(int id)
         {
             var p = repository.GetProductById(id);
@@ -44,7 +48,7 @@ namespace eStoreAPI.Controllers
             return NoContent();
         }
 
-        [HttpPut("id")]
+        [HttpPut("{id}")]
         public IActionResult UpdateProduct(int id)
         {
             var p = repository.GetProductById(id);

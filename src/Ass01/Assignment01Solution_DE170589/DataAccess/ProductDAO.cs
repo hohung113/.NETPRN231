@@ -93,6 +93,22 @@ namespace DataAccess
                 throw new Exception(e.Message);
             }
         }
+
+        public List<Product> GetProductByRangePrice(decimal minPrice , decimal maxPrice)
+        {
+            try
+            {
+                using (var _eStoreDb = new EStoreDbContext())
+                {
+                    return _eStoreDb.Products.Where(x => x.UnitPrice >= minPrice && x.UnitPrice <= maxPrice).ToList();
+                }
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message);
+            }
+        }
         public void DeleteProduct(Product p)
         {
             try

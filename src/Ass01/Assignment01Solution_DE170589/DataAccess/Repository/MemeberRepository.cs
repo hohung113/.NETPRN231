@@ -16,6 +16,8 @@ namespace DataAccess.Repository
             MemberDAO.Instance.AddMember(member);
         }
 
+        public Member GetMemberByEmail(string email) => MemberDAO.Instance.GetMemberByEmail(email);
+
         public bool IsAdmin()
         {
             return _isAdmin;

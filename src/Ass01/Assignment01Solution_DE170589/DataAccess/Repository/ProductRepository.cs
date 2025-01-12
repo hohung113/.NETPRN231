@@ -43,7 +43,7 @@ namespace DataAccess.Repository
         }
         public IEnumerable<Product> GetProductByPriceRange(decimal minPrice, decimal maxPrice)
         {
-            throw new NotImplementedException();
+            return productDAO.GetProductByRangePrice(minPrice, maxPrice);
         }
 
         public IEnumerable<Product> GetProductByUnitStock(int unitInStock)

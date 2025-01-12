@@ -15,5 +15,6 @@ namespace DataAccess.Repository
         void Logout();
         void UpdateMember(Member member);
         void AddMemeber(Member member);
+        Member GetMemberByEmail(string email);
     }
 }
