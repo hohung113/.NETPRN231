@@ -9,9 +9,9 @@ namespace DataAccess.Repository
 {
     public interface IOrderRepository
     {
-        //List<CartItem> CartItems { get; set; }
-        public Task AddNewOrder(Order order);
-        //public void AddToCart(CartItem item);
-        public void ClearCartItem();
+        public IEnumerable<Order> GetAllOrders();
+        public void AddOrder(Order od);
+        public IEnumerable<Order> GetOrderByMemberId(int id);
+        public IEnumerable<Order> GetOrderByOrderDate(DateOnly date, int memberID);
     }
 }

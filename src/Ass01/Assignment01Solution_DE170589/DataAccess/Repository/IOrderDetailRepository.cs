@@ -9,8 +9,8 @@ namespace DataAccess.Repository
 {
     public interface IOrderDetailRepository
     {
-        public Task AddNewOrderDetail(OrderDetail orderDetail);
-        public List<OrderDetail> GetAllOrdersDetail();
-        public List<OrderDetail> GetAllOrderDetailByMember();
+        public void AddNewOrderDetail(OrderDetail orderDetail);
+        public List<OrderDetail> GetOrdersDetails();
+        public List<OrderDetail> GetAllOrderDetail();
     }
 }

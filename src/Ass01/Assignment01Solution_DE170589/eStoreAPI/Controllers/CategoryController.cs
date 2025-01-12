@@ -11,7 +11,6 @@ namespace eStoreAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class CategoryController : ControllerBase
     {
         private ICatetoryRepository _catetoryRepository = new CategoryRepository();

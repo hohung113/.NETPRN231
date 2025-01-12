@@ -1,7 +1,11 @@
-﻿using BusinessObject.Entity;
+﻿using BusinessObject.Enitty;
+using BusinessObject.Entity;
 using DataAccess.Repository;
+using eStoreAPI.Dtos;
+using Mapster;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace eStoreAPI.Controllers
 {
@@ -21,9 +25,10 @@ namespace eStoreAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateProduct(Product p)
+        public IActionResult CreateProduct(ProductDTO p)
         {
-            repository.AddProduct(p);
+            var product = p.Adapt<Product>();
+            repository.AddProduct(product);
             return NoContent();
         }
 
