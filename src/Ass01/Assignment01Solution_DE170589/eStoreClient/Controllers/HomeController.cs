@@ -1,24 +1,35 @@
+using BusinessObject.Entity;
+using eStoreClient.JsonHelper;
 using eStoreClient.Models;
+using eStoreClient.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Text.Json;
 
 namespace eStoreClient.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IApiService _apiService;
+        public HomeController(ILogger<HomeController> logger, IApiService apiService)
         {
             _logger = logger;
+            _apiService = apiService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var result = await _apiService.GetFromApiAsync<object>("api/Product");
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            var productList = JsonHelperOption.DeserializeList<Product>(result.ToString());
+            return View(productList);
         }
-
-        public IActionResult Privacy()
+        public 
+IActionResult Privacy()
         {
             return View();
         }

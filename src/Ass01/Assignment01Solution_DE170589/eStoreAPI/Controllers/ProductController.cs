@@ -3,19 +3,21 @@ using BusinessObject.Entity;
 using DataAccess.Repository;
 using eStoreAPI.Dtos;
 using Mapster;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 namespace eStoreAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class ProductController : ControllerBase
     {
         private IProductRepository repository = new ProductRepository();
 
         [HttpGet]
+        [Authorize(Roles ="User")]
         public ActionResult<IEnumerable<Product>> GetAlls() => repository.GetAll();
 
         [HttpGet("name/{text}")]

@@ -57,13 +57,19 @@ namespace BusinessObject
         public static bool VerifyPassword(string storedHash, string password)
         {
             byte[] hashBytes = Convert.FromBase64String(storedHash);
+            if (hashBytes.Length != SaltSize + HashSize)
+            {
+                throw new ArgumentException("Stored hash is not in the expected format. Expected length: "
+                    + (SaltSize + HashSize) + " bytes.");
+            }
+
             byte[] salt = new byte[SaltSize];
             Array.Copy(hashBytes, 0, salt, 0, salt.Length);
 
             using (var pbkdf2 = new Rfc2898DeriveBytes(password, salt, IterationCount))
             {
-                byte[] newHash = pbkdf2.GetBytes(HashSize); 
-                                                           
+                byte[] newHash = pbkdf2.GetBytes(HashSize);
+
                 for (int i = 0; i < HashSize; i++)
                 {
                     if (hashBytes[i + salt.Length] != newHash[i])
@@ -76,14 +82,16 @@ namespace BusinessObject
             return true;
         }
 
+
         private static byte[] GenerateSalt()
         {
-            using (var rng = new RNGCryptoServiceProvider())
+            using (var rng = RandomNumberGenerator.Create())
             {
                 byte[] salt = new byte[SaltSize];
-                rng.GetBytes(salt); 
+                rng.GetBytes(salt);
                 return salt;
             }
         }
+
     }
 }
