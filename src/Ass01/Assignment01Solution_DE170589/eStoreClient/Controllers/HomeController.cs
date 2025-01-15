@@ -65,6 +65,20 @@ namespace eStoreClient.Controllers
             }
             return RedirectToAction("Index");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(ProductModel product)
+        {
+            if (ModelState.IsValid)
+            {
+                await _apiService.PostToApiAsync<object>("api/Product", product);
+                return RedirectToAction("Index");
+            }
+            return View(product);
+        }
+
+
+
         public IActionResult Privacy()
         {
             return View();
