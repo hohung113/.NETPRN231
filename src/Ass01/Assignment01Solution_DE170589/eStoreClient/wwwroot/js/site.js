@@ -1,4 +1,15 @@
 ﻿$(document).ready(function () {
+    var userRole = 'Guest';
+    if (userRole === 'Member') {
+        $('#btnCreate').show(); 
+        $('#addToCartBtn').prop('disabled', false);
+    } else {
+        $('#btnCreate').hide();
+        $('#addToCartBtn').prop('disabled', true);
+    }
+});
+
+$(document).ready(function () {
     $('#loginForm').on('submit', function (e) {
         e.preventDefault();
 
@@ -14,11 +25,10 @@
             },
             success: function (response) {
                 if (response.token) {
-                    var token = response.token.token;  // Access the token from the response object
+                    var token = response.token.token;
                     localStorage.setItem('token', token);
                     setAuthHeader(token);
 
-                    console.log('Token stored:', token); 
                     alert('Login successful');
                     $('#loginModal').modal('hide');
                 } else {
@@ -80,19 +90,15 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-    // Khi trang tải xong, kiểm tra quyền
     checkUserRole();
 
     $('#addToCartBtn').on('click', function (e) {
         e.preventDefault();
-
-        // Lấy token từ localStorage
         var token = localStorage.getItem('token');
         if (!token) {
             alert('You need to log in first.');
             return;
         }
-        console.log(token)
      
         var decodedToken = decodeToken(token);
         var userRole = decodedToken
@@ -101,8 +107,6 @@ $(document).ready(function () {
         if (userRole !== 'User') {
             alert('You do not have permission to perform this action.');
             return;
-        } else {
-            console.log(123124124124)
         }
 
         

@@ -32,6 +32,8 @@ namespace eStoreClient.Controllers
                 PropertyNameCaseInsensitive = true
             };
             var productList = JsonHelperOption.DeserializeList<Product>(result.ToString());
+
+            ViewBag.ProductName = productName;
             return View(productList);
         }
         public async Task<IActionResult> Cate()

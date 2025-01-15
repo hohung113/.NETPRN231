@@ -12,7 +12,7 @@
     <div class="mb-3 row">
         <label for="exampleFormControlInput1" class="col-form-label col-sm-2">Search</label>
         <div class="col-sm-8">
-            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Product Name" name="productName">
+            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Product Name" name="productName" value="@ViewBag.ProductName">
         </div>
         <div class="col-sm-2">
             <button type="submit" class="btn btn-primary">Search</button>
@@ -20,7 +20,12 @@
     </div>
 </form>
 
-
+<hr />
+<p>
+    <a id="btnCreate" href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#createProductModal">
+        Create Product
+    </a>
+</p>
 
 <div class="container">
     <table class="table">
@@ -89,13 +94,45 @@
     </div>
 </div>
 
-<script>
-    $(document).ready(function () {
-        var userRole = 'Guest'; // Ví dụ từ ViewData hoặc JWT decode
-        if (userRole === 'Member') {
-            $('#addToCartBtn').prop('disabled', false);
-        } else {
-            $('#addToCartBtn').prop('disabled', true);
-        }
-    });
-</script>
+
+<!-- Create Product Modal -->
+<div class="modal fade" id="createProductModal" tabindex="-1" aria-labelledby="createProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createProductModalLabel">Create New Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createProductForm" method="post" action="/Product/Create">
+                    <div class="mb-3">
+                        <label for="productName" class="form-label">Product Name</label>
+                        <input type="text" class="form-control" id="productName" name="ProductName" placeholder="Enter product name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Category</label>
+                        <input type="text" class="form-control" id="category" name="Category" placeholder="Enter category" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="weight" class="form-label">Weight</label>
+                        <input type="text" class="form-control" id="weight" name="Weight" placeholder="Enter weight" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="unitInStock" class="form-label">Units In Stock</label>
+                        <input type="number" class="form-control" id="unitInStock" name="UnitInStock" min="1" placeholder="Enter units in stock" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="unitPrice" class="form-label">Unit Price</label>
+                        <input type="number" class="form-control" id="unitPrice" name="UnitPrice" min="1" step="0.01" placeholder="Enter unit price" required>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn btn-success w-100">Save Product</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
