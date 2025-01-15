@@ -17,7 +17,7 @@ namespace eStoreAPI.Controllers
         private IProductRepository repository = new ProductRepository();
 
         [HttpGet]
-        [Authorize(Roles ="User")]
+        //[Authorize(Roles ="User")]
         public ActionResult<IEnumerable<Product>> GetAlls() => repository.GetAll();
 
         [HttpGet("name/{text}")]

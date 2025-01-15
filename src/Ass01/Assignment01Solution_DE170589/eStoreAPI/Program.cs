@@ -37,8 +37,16 @@ namespace eStoreAPI
 
             builder.Services.AddAuthorization();
 
-
-
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowLocalhost", policy =>
+                {
+                    policy.WithOrigins("https://localhost:7017")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .AllowCredentials();
+                });
+            });
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -72,14 +80,17 @@ namespace eStoreAPI
 
             var app = builder.Build();
 
+            app.UseCors("AllowLocalhost"); 
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+           // app.UseMiddleware<GlobalExceptionMiddleware>();
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseMiddleware<UserMiddleware>();
             app.UseAuthorization();
 

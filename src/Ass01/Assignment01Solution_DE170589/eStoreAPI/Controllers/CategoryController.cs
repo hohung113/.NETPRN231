@@ -15,6 +15,7 @@ namespace eStoreAPI.Controllers
     {
         private ICatetoryRepository _catetoryRepository = new CategoryRepository();
         [HttpGet]
+        [Authorize]
         public ActionResult<List<Category>> GetCategories()
         {
             return _catetoryRepository.GetCategories().Select( x => new Category
@@ -31,5 +32,28 @@ namespace eStoreAPI.Controllers
             _catetoryRepository.AddCategory(dto);
             return NoContent();
         }
+
+        [HttpPost("TestEnum")]
+        public ActionResult CreateCategory22(Base tesy)
+        {
+            // Mapster
+            //var dto = cate.Adapt<Category>();
+           // _catetoryRepository.AddCategory(dto);
+            return NoContent();
+        }
+    }
+    public enum TEST
+    {
+        grade,
+        gradeB
+    }
+    public class UserTest
+    {
+        public int Number { get; set; }
+    }
+
+    public class Base : UserTest
+    {
+        public int One { get; set; }
     }
 }
