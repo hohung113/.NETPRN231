@@ -49,13 +49,13 @@ namespace eStoreAPI.Controllers
             {
                 token = _jwtService.GenerateToken(email);
 
-                Response.Cookies.Append("AuthToken", token, new CookieOptions
-                {
-                    HttpOnly = true,
-                    Secure = true,
-                    SameSite = SameSiteMode.Strict,
-                    Expires = DateTime.UtcNow.AddMinutes(30)
-                });
+                //Response.Cookies.Append("AuthToken", token, new CookieOptions
+                //{
+                //    HttpOnly = false,
+                //    Secure = false,
+                //    SameSite = SameSiteMode.Strict,
+                //    Expires = DateTime.UtcNow.AddMinutes(30)
+                //});
 
                 return Ok(new { Token = token });
             }

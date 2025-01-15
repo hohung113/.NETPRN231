@@ -19,7 +19,7 @@ namespace DataAccess
             {
                 using(var _eStoreDb =  new EStoreDbContext())
                 {
-                    listProducts = _eStoreDb.Products.ToList();
+                    listProducts = _eStoreDb.Products.Include(x => x.Category).ToList();
                 }
             }
             catch (Exception ex)
@@ -84,7 +84,7 @@ namespace DataAccess
             {
                 using (var _eStoreDb = new EStoreDbContext())
                 {
-                    return _eStoreDb.Products.Where(x => x.ProductName.Contains(name)).ToList();
+                    return _eStoreDb.Products.Include(x => x.Category).Where(x => x.ProductName.Contains(name)).ToList();
                 }
             }
             catch (Exception e)

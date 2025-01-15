@@ -24,7 +24,7 @@ namespace eStoreAPI.Middlleware
         {
             _logger.LogInformation("Processing request: " + context.Request.Path);
 
-            var token = context.Request.Cookies["AuthToken"];
+            var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
             if (!string.IsNullOrEmpty(token))
             {
