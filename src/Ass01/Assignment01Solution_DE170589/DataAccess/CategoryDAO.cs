@@ -29,6 +29,24 @@ namespace DataAccess
             }
             return listCates;
         }
+        public Category GetCategory(int id)
+        {
+            Category category;
+            try
+            {
+                using (var _eStoreDb = new EStoreDbContext())
+                {
+                    category = _eStoreDb.Categories.Include(x => x.Products).FirstOrDefault(it => it.CategoryId == id);
+                   
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
+            return category;
+        }
         public void AddCategory(Category category)
         {
             try

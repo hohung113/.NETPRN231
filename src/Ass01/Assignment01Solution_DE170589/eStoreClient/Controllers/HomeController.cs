@@ -1,3 +1,4 @@
+using BusinessObject.Enitty;
 using BusinessObject.Entity;
 using eStoreClient.JsonHelper;
 using eStoreClient.Models;
@@ -19,13 +20,13 @@ namespace eStoreClient.Controllers
             _apiService = apiService;
         }
 
-        public async Task<IActionResult> Index(string? productName)
+        public async Task<IActionResult> Index(string? productName,int Category)
         {
 
             var result = await _apiService.GetFromApiAsync<object>("api/Product");
-            if (!String.IsNullOrEmpty(productName))
+            if (!String.IsNullOrEmpty(productName) || Category != 0)
             {
-                result = await _apiService.GetFromApiAsync<object>($"api/Product/name/{productName}");
+                result = await _apiService.GetFromApiAsync<object>($"api/Product/search?text={productName}&categoryId={Category}");
             }
             var options = new JsonSerializerOptions
             {
@@ -34,6 +35,7 @@ namespace eStoreClient.Controllers
             var productList = JsonHelperOption.DeserializeList<Product>(result.ToString());
 
             ViewBag.ProductName = productName;
+            ViewBag.SelectedCategoryId = Category;
             return View(productList);
         }
         public async Task<IActionResult> Cate()
@@ -76,8 +78,6 @@ namespace eStoreClient.Controllers
             }
             return View(product);
         }
-
-
 
         public IActionResult Privacy()
         {

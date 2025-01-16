@@ -12,5 +12,6 @@ namespace DataAccess.Repository
     {
         public void AddCategory(Category c);
         public List<Category> GetCategories();
+        public Category GetCategory(int id);
     }
 }

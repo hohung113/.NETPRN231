@@ -15,7 +15,6 @@ namespace eStoreAPI.Controllers
     {
         private ICatetoryRepository _catetoryRepository = new CategoryRepository();
         [HttpGet]
-        [Authorize]
         public ActionResult<List<Category>> GetCategories()
         {
             return _catetoryRepository.GetCategories().Select( x => new Category
@@ -24,6 +23,13 @@ namespace eStoreAPI.Controllers
                 CategoryName = x.CategoryName,
             }).ToList();
         }
+
+        [HttpGet("getcatebyid/{id}")]
+        public ActionResult<Category> GetCategory(int id)
+        {
+            return _catetoryRepository.GetCategory(id);
+        }
+
         [HttpPost]
         public ActionResult CreateCategory([FromBody] CategoryDTO cate)
         {

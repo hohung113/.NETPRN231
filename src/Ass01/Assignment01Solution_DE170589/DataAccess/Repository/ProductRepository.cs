@@ -33,9 +33,9 @@ namespace DataAccess.Repository
             return productDAO.FindProductById(productID);
         }
 
-        public List<Product> GetProductByName(string productName)
+        public List<Product> GetProductByName(string? productName, int? categoryId)
         {
-            return productDAO.GetProductByName(productName);     
+            return productDAO.GetProductByName (productName, categoryId);     
         }
         public void UpdateProduct(Product product)
         {
