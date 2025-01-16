@@ -36,7 +36,7 @@ namespace DataAccess
             {
                 using (var _eStoreDb = new EStoreDbContext())
                 {
-                    product = _eStoreDb.Products.SingleOrDefault(x => x.ProductId == productId);
+                    product = _eStoreDb.Products.Include(x => x.Category).SingleOrDefault(x => x.ProductId == productId);
                 }
             }
             catch (Exception ex)
@@ -78,21 +78,26 @@ namespace DataAccess
                 throw new Exception(e.Message);
             }
         }
-        public List<Product> GetProductByName(string name)
+        public List<Product> GetProductByName(string productName, int? categoryId)
         {
-            try
+            using (var context = new EStoreDbContext())
             {
-                using (var _eStoreDb = new EStoreDbContext())
-                {
-                    return _eStoreDb.Products.Include(x => x.Category).Where(x => x.ProductName.Contains(name)).ToList();
-                }
-            }
-            catch (Exception e)
-            {
+                IQueryable<Product> query = context.Products.Include(x => x.Category);
 
-                throw new Exception(e.Message);
+                if (!string.IsNullOrEmpty(productName))
+                {
+                    query = query.Where(x => x.ProductName.Contains(productName));
+                }
+
+                if (categoryId != 0)
+                {
+                    query = query.Where(x => x.CategoryId == categoryId);
+                }
+                return query.ToList();
             }
         }
+
+
 
         public List<Product> GetProductByRangePrice(decimal minPrice , decimal maxPrice)
         {

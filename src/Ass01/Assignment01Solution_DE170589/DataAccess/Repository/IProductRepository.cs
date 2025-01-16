@@ -17,7 +17,7 @@ namespace DataAccess.Repository
         public Product GetProductById(int productID);
         public IEnumerable<Product> GetProductByUnitStock(int unitInStock);
         public IEnumerable<Product> GetProductByPriceRange(decimal minPrice, decimal maxPrice);
-        public List<Product> GetProductByName(string productName);
+        public List<Product> GetProductByName(string productName, int? categoryId);
 
     }
 }

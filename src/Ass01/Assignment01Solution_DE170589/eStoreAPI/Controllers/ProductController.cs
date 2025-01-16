@@ -5,6 +5,7 @@ using eStoreAPI.Dtos;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Xml;
 
 
 namespace eStoreAPI.Controllers
@@ -20,10 +21,10 @@ namespace eStoreAPI.Controllers
         //[Authorize(Roles ="User")]
         public ActionResult<IEnumerable<Product>> GetAlls() => repository.GetAll();
 
-        [HttpGet("name/{text}")]
-        public ActionResult<IEnumerable<Product>> GetPByName(string text)
+        [HttpGet("search")]
+        public ActionResult<IEnumerable<Product>> GetPByName([FromQuery] string? text, [FromQuery] int? categoryId)
         {
-            return repository.GetProductByName(text);
+            return repository.GetProductByName(text, categoryId);
         }
         [HttpGet("range")]
         public ActionResult<IEnumerable<Product>> GetProductByRange(decimal minPrice, decimal maxPrice)
@@ -31,7 +32,8 @@ namespace eStoreAPI.Controllers
             return repository.GetProductByPriceRange(minPrice,maxPrice).ToList();
         }
         [HttpPost]
-        public IActionResult CreateProduct(ProductDTO p)
+        [Authorize]
+        public IActionResult CreateProduct([FromBody] ProductDTO p)
         {
             var product = p.Adapt<Product>();
             repository.AddProduct(product);
@@ -49,15 +51,22 @@ namespace eStoreAPI.Controllers
             repository.DeleteProduct(p);
             return NoContent();
         }
-
+        [HttpGet("{id}")]
+        public ActionResult<Product> GetProductById(int id)
+        {
+            return repository.GetProductById(id);
+        }
         [HttpPut("{id}")]
-        public IActionResult UpdateProduct(int id)
+        [Authorize]
+        public IActionResult UpdateProduct(int id, ProductDTO dto)
         {
             var p = repository.GetProductById(id);
             if (p == null)
             {
                 return NotFound();
             }
+            p = dto.Adapt<Product>();
+            p.ProductId = id;
             repository.UpdateProduct(p);
             return NoContent();
         }

@@ -10,16 +10,24 @@
 </div>
 <form method="post" action="/Home/Index">
     <div class="mb-3 row">
-        <label for="exampleFormControlInput1" class="col-form-label col-sm-2">Search</label>
-        <div class="col-sm-8">
+        <div class="col-sm-3">
+            <label for="category1" class="col-form-label">Category</label>
+            <select class="form-control" id="category1" name="Category">
+                <option value="">Select a category</option>
+            </select>
+        </div>
+        <div class="col-sm-6">
+            <label for="exampleFormControlInput1" class="col-form-label">Product Name</label>
             <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Product Name" name="productName" value="@ViewBag.ProductName">
         </div>
-        <div class="col-sm-2">
-            <button type="submit" class="btn btn-primary">Search</button>
+        <div class="col-sm-3">
+            <label for="search1" class="col-form-label">Action</label>
+            <button type="submit" id="search1" class="btn btn-primary w-100">
+                <i class="fas fa-search"></i>
+            </button>
         </div>
     </div>
 </form>
-
 <hr />
 <p>
     <a id="btnCreate" href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#createProductModal">
@@ -38,6 +46,8 @@
                 <th>Unit Price</th>
                 <th>Select Quantity</th>
                 <th>Add to cart</th>
+                <th>Edit</th>
+
             </tr>
         </thead>
         <tbody>
@@ -49,11 +59,19 @@
                     <td>@product.Weight</td>
                     <td>@product.UnitInStock</td>
                     <td>@product.UnitPrice</td>
-                    <td><input type="number" min="1" value="1" name="quanProduct"/></td>
+                    <td><input type="number" min="1" value="1" name="quanProduct" /></td>
                     <td>
-                        <button class="cartt" type="submit" id="addToCartBtn" disabled>
+                        <button class="cartt" type="submit" id="addToCartBtn">
                             <i class="fa-solid fa-cart-shopping"></i>
                         </button>
+                    </td>
+                    <td>
+                        <a id="editBtn" data-product-id="@product.ProductId" style="display: inline-block; margin-right: 10px;">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a class="deleteBtn" data-product-id="@product.ProductId" style="display: inline-block">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
                     </td>
                 </tr>
             }
@@ -94,8 +112,7 @@
     </div>
 </div>
 
-
-<!-- Create Product Modal -->
+@* Modal Create Product *@
 <div class="modal fade" id="createProductModal" tabindex="-1" aria-labelledby="createProductModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -111,7 +128,9 @@
                     </div>
                     <div class="mb-3">
                         <label for="category" class="form-label">Category</label>
-                        <input type="text" class="form-control" id="category" name="Category" placeholder="Enter category" required>
+                        <select class="form-control" id="category" name="Category" required>
+                            <option value="">Select a category</option>
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label for="weight" class="form-label">Weight</label>
@@ -127,6 +146,51 @@
                     </div>
                     <div class="d-flex justify-content-center">
                         <button type="submit" class="btn btn-success w-100">Save Product</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit Product -->
+<div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProductModalLabel">Edit Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editProductForm" method="post" action="/Product/Update">
+                    <div class="mb-3">
+                        <label for="productName2" class="form-label">Product Name</label>
+                        <input type="text" class="form-control" id="productName2" name="ProductName" placeholder="Enter product name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Category</label>
+                        <select class="form-control" id="category2" name="Category" required>
+                            <option value="">Select a category</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="weight" class="form-label">Weight</label>
+                        <input type="text" class="form-control" id="weight2" name="Weight" placeholder="Enter weight" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="unitInStock" class="form-label">Units In Stock</label>
+                        <input type="number" class="form-control" id="unitInStock2" name="UnitInStock" min="1" placeholder="Enter units in stock" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="unitPrice" class="form-label">Unit Price</label>
+                        <input type="number" class="form-control" id="unitPrice2" name="UnitPrice" min="1" step="0.01" placeholder="Enter unit price" required>
+                    </div>
+                    <input type="hidden" id="productId2" name="ProductId">
+                    <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn btn-success w-100">Save Changes</button>
                     </div>
                 </form>
             </div>

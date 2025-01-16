@@ -13,5 +13,7 @@ namespace DataAccess.Repository
         public void AddCategory(Category c) => categoryDAO.AddCategory(c);
 
         public List<Category> GetCategories() => categoryDAO.GetListCate();
+
+        public Category GetCategory(int id) => categoryDAO.GetCategory(id);
     }
 }
