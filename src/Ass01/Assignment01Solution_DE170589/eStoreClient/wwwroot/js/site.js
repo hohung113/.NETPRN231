@@ -1,4 +1,24 @@
 ﻿$(document).ready(function () {
+    var token = localStorage.getItem('token');
+
+    if (GetUserRole(token) !== 'User') {
+        $('#btnCreate').show();
+        $('.cartt').prop('disabled', false);
+    } else {
+        $('.cartt').prop('disabled', true);
+        $('#btnCreate').hide();
+    }
+});
+function GetUserRole(token) {
+    var decodedToken = decodeToken(token);
+    var userRole = decodedToken
+        ? decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
+        : null;
+    return userRole;
+}
+
+
+$(document).ready(function () {
     $.ajax({
         url: 'https://localhost:7013/api/Category',
         type: 'GET',
@@ -31,17 +51,6 @@ function decodeToken(token) {
         return null;
     }
 }
-//$(document).ready(function () {
-//    var userRole = 'Guest';
-//    if (userRole === 'Member') {
-//        $('#btnCreate').show();
-//        $('#addToCartBtn').prop('disabled', false); 
-//    }
-//    if (userRole === 'Guest') {
-//        $('#addToCartBtn').prop('disabled', true);
-//        $('#btnCreate').hide();
-//    }
-//    });
 
 
 $(document).ready(function () {
@@ -88,7 +97,7 @@ $(document).ready(function () {
 });
 $(document).ready(function () {
     $('#listCategoryLink').on('click', function (e) {
-        e.preventDefault(); 
+        e.preventDefault();
         var token = localStorage.getItem('token');
         if (!token) {
             alert('You need to log in first.');
@@ -99,12 +108,12 @@ $(document).ready(function () {
             url: 'https://localhost:7013/api/Category',
             type: 'GET',
             headers: {
-                'Authorization': 'Bearer ' + token 
+                'Authorization': 'Bearer ' + token
             },
             success: function (response) {
                 console.log('Categories:', response);
                 alert('Categories fetched successfully!');
-  
+
             },
             error: function (xhr, status, error) {
                 console.error('Error fetching categories:', error);
@@ -126,7 +135,7 @@ $(document).ready(function () {
             alert('You need to log in first.');
             return;
         }
-     
+
         var decodedToken = decodeToken(token);
         var userRole = decodedToken
             ? decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
@@ -135,14 +144,14 @@ $(document).ready(function () {
             alert('You do not have permission to perform this action.');
             return;
         }
-        
+
         $.ajax({
             url: '/api/Cart/Add222',
             type: 'POST',
             headers: {
-                'Authorization': 'Bearer ' + token 
+                'Authorization': 'Bearer ' + token
             },
-            data: JSON.stringify({ productId: 123, quantity: 1 }), 
+            data: JSON.stringify({ productId: 123, quantity: 1 }),
             contentType: 'application/json',
             success: function (response) {
                 if (response.success) {
@@ -168,7 +177,7 @@ $(document).ready(function () {
         var userRole = decodedToken
             ? decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
             : null;
-     
+
         if (userRole === 'User') {
             $('.cartt').prop('disabled', false);
         } else {
@@ -212,7 +221,6 @@ $(document).ready(function () {
         var userRole = decodedToken
             ? decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
             : null;
-        console.log(userRole)
         if (userRole !== 'User') {
             alert('You do not have permission to perform this action.');
             return;
@@ -272,7 +280,7 @@ $(document).ready(function () {
                 $('#category2').append('<option value="">Select a category</option>');
                 $('#category2').append('<option value="' + response.category.categoryId + '" selected>' + response.category.categoryName + '</option>');
 
-                $('#editProductModal').modal('show'); 
+                $('#editProductModal').modal('show');
             },
             error: function () {
                 alert('Failed to load product details');
@@ -293,7 +301,6 @@ $(document).ready(function () {
             var userRole = decodedToken
                 ? decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
                 : null;
-            console.log(userRole)
             if (userRole !== 'User') {
                 alert('You do not have permission to perform this action.');
                 return;
@@ -318,8 +325,8 @@ $(document).ready(function () {
                 data: JSON.stringify(productData),
                 success: function () {
                     alert('Product updated successfully');
-                    $('#editProductModal').modal('hide');  
-                    window.location.reload(); 
+                    $('#editProductModal').modal('hide');
+                    window.location.reload();
                 },
                 error: function () {
                     alert('An error occurred while updating the product');
@@ -334,12 +341,11 @@ $(document).ready(function () {
 $(document).ready(function () {
     $('.deleteBtn').on('click', function () {
         var productId = $(this).data('product-id');
-        console.log(productId)
         var confirmDelete = confirm("Are you sure you want to delete this product?");
         if (confirmDelete) {
             $.ajax({
-                url: 'https://localhost:7013/api/Product/' + productId, 
-                type: 'DELETE', 
+                url: 'https://localhost:7013/api/Product/' + productId,
+                type: 'DELETE',
                 success: function (response) {
                     alert("Product deleted successfully!");
                     window.location.reload();

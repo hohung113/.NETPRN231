@@ -61,16 +61,16 @@
                     <td>@product.UnitPrice</td>
                     <td><input type="number" min="1" value="1" name="quanProduct" /></td>
                     <td>
-                        <button class="cartt" type="submit" id="addToCartBtn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </button>
+                        <a class="cartt" id="addToCartBtn">
+                            <i class="fa-solid fa-cart-shopping" style="color: #fa0000;"></i>
+                        </a>
                     </td>
                     <td>
                         <a id="editBtn" data-product-id="@product.ProductId" style="display: inline-block; margin-right: 10px;">
                             <i class="fas fa-edit"></i>
                         </a>
                         <a class="deleteBtn" data-product-id="@product.ProductId" style="display: inline-block">
-                            <i class="fa-solid fa-trash"></i>
+                            <i class="fa-solid fa-trash "></i>
                         </a>
                     </td>
                 </tr>
