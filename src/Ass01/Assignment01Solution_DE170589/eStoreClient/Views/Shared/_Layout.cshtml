@@ -28,10 +28,13 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         <li class="nav-item">
-                            <button class="nav-link text-dark btn" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
+                            <button id="btnLogin" class="nav-link text-dark btn" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" id="listCategoryLink">ListCategory</a>
+                            <button id="btnLogout" class="nav-link text-dark btn" style="display: none;">Logout</button>
+                        </li>
+                        <li class="nav-item">
+                            <button disabled id="btnHello" class="nav-link text-dark btn" style="display: none;">Hello</button>
                         </li>
                     </ul>
                 </div>

@@ -1,20 +1,68 @@
-﻿$(document).ready(function () {
-    var token = localStorage.getItem('token');
+﻿document.getElementById("btnLogout").addEventListener("click", function () {
+    localStorage.removeItem("token");
+    location.reload();
+});
 
-    if (GetUserRole(token) !== 'User') {
-        $('#btnCreate').show();
-        $('.cartt').prop('disabled', false);
+// show when run program 
+$(document).ready(function () {
+    var token = localStorage.getItem('token');
+    var userRole = GetUserRole(token);
+    var userName = GetUserName(token);
+    var btnHello = document.getElementById("btnHello");
+
+    if (userRole == null || userRole === 'User') {
+
+        document.querySelectorAll(".deleteBtn").forEach(function (btn) {
+            btn.style.display = "none";
+        });
+        //document.querySelectorAll(".cartt").forEach(function (btn) {
+        //    btn.style.display = "none";
+        //});
+    }
+
+    if (userRole != null && userName != null) {
+        $("#btnLogin").hide();
+        $("#btnLogout").show();
+        $("#btnHello").show();
+        btnHello.innerText += " " + userName;
     } else {
-        $('.cartt').prop('disabled', true);
+        $("#btnHello").hide();
+        $("#btnLogin").show();
+        $("#btnLogout").hide();
+    }
+    if (userRole === 'User') {
         $('#btnCreate').hide();
+    } else {
+        $('#btnCreate').show();
     }
 });
+
 function GetUserRole(token) {
     var decodedToken = decodeToken(token);
     var userRole = decodedToken
         ? decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
         : null;
     return userRole;
+}
+function GetUserName(token) {
+    function decodeToken(token) {
+        if (!token) return null;
+        const parts = token.split(".");
+        if (parts.length !== 3) return null;
+
+        try {
+            const payload = JSON.parse(atob(parts[1].replace(/-/g, "+").replace(/_/g, "/")));
+            return payload;
+        } catch (error) {
+            console.error("Invalid token:", error);
+            return null;
+        }
+    }
+    const decodedToken = decodeToken(token);
+    const user = decodedToken
+        ? decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"]
+        : null;
+    return user;
 }
 
 
@@ -35,12 +83,6 @@ $(document).ready(function () {
         }
     });
 });
-
-$(window).on('beforeunload', function () {
-    localStorage.removeItem('token');
-    console.log('Token removed from localStorage');
-});
-
 
 function decodeToken(token) {
     try {
@@ -78,9 +120,10 @@ $(document).ready(function () {
                 } else {
                     alert('Login failed');
                 }
+                location.reload();
             },
             error: function () {
-                alert('An error occurred');
+                alert('Login failed email or password');
             }
         });
     });
@@ -212,7 +255,6 @@ $(document).ready(function () {
 
         var token = localStorage.getItem('token');
         if (!token) {
-            console.log(1)
             alert('You need to log in first.');
             return;
         }
