@@ -11,6 +11,14 @@ namespace DataAccess.Repository
     {
         public void AddNewOrderDetail(OrderDetail orderDetail) => OrderDetailDAO.Instance.AddNewOrderDetail(orderDetail);
 
+        public void AddOrderDetails(List<OrderDetail> orderDetails)
+        {
+            foreach (var item in orderDetails)
+            {
+                OrderDetailDAO.Instance.AddNewOrderDetail(item);
+            }
+        }
+
         public List<OrderDetail> GetAllOrderDetail() => OrderDetailDAO.Instance.GetOrdersDetails();
 
         public List<OrderDetail> GetOrdersDetails()

@@ -16,11 +16,18 @@ namespace eStoreAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<OrderDetail>> GetAlls() => repository.GetAllOrderDetail().ToList();
 
+        //[HttpPost]
+        //public IActionResult AddOrder(OrderDetailDTO dto)
+        //{
+        //    var orderLine = dto.Adapt<OrderDetail>();
+        //    repository.AddNewOrderDetail(orderLine);
+        //    return NoContent();
+        //}
         [HttpPost]
-        public IActionResult AddOrder(OrderDetailDTO dto)
+        public IActionResult AddListOrder(List<OrderDetailDTO> dto)
         {
-            var orderLine = dto.Adapt<OrderDetail>();
-            repository.AddNewOrderDetail(orderLine);
+            var orderLine = dto.Adapt<List<OrderDetail>>();
+            repository.AddOrderDetails(orderLine);
             return NoContent();
         }
     }
