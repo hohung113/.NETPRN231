@@ -31,7 +31,7 @@ namespace DataAccess
         }
         public IEnumerable<Order> GetOrderByMemberId(int id)
         {
-            var listOrders = _context.Orders.Include(x => x.OrderDetails).ToList();
+            var listOrders = _context.Orders.Include(x => x.OrderDetails).ThenInclude(od => od.Product).Where(it => it.OrderDetails.Any()).ToList();
             return listOrders.Any() ? listOrders.Where(x => x.MemberId == id) : Enumerable.Empty<Order>();
         }
         public IEnumerable<Order> GetOrderByOrderDate(DateOnly date, int memberID)

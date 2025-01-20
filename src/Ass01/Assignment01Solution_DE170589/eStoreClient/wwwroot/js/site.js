@@ -2,6 +2,49 @@
     localStorage.removeItem("token");
     location.reload();
 });
+$(document).ready(function () {
+    $('#myOrderBtn').on('click', function () {
+        var token = localStorage.getItem('token');
+        if (!token) {
+            alert("Token not found! Please log in.");
+            return;
+        }
+        var decodedToken = decodeToken(token);
+        if (decodedToken === null) {
+            alert("Failed to decode the token.");
+            return;
+        }
+        var memberId = parseInt(decodedToken["Id"], 10);
+        $.ajax({
+            url: `https://localhost:7013/api/Order/${memberId}`,
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            success: function (response) {
+                $('#orderTableBody').empty();
+                response.forEach(function (order) {
+                    order.orderDetails.forEach(function (detail) {
+                        var totalPrice = detail.unitPrice * detail.quantity;
+                        var row = `
+                            <tr>
+                                <td>${detail.product.productName}</td>
+                                <td>${detail.unitPrice}</td>
+                                <td>${detail.quantity}</td>
+                                <td>${totalPrice}</td>
+                            </tr>
+                        `;
+                        $('#orderTableBody').append(row);
+                    });
+                });
+                $('#orderModal').modal('show');
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred while fetching your orders.");
+            }
+        });
+    });
+});
 
 // show when run program 
 $(document).ready(function () {
@@ -9,17 +52,21 @@ $(document).ready(function () {
     var userRole = GetUserRole(token);
     var userName = GetUserName(token);
     var btnHello = document.getElementById("btnHello");
-
+    console.log(1)
+    console.log(token)
+    if (token == null) {
+        $('#btnCreate').hide();
+        $('#myOrderBtn').hide();
+    }
     if (userRole == null || userRole === 'User') {
 
         document.querySelectorAll(".deleteBtn").forEach(function (btn) {
             btn.style.display = "none";
         });
-        //document.querySelectorAll(".cartt").forEach(function (btn) {
-        //    btn.style.display = "none";
-        //});
+        document.querySelectorAll(".editBtn").forEach(function (btn) {
+            btn.style.display = "none";
+        });
     }
-
     if (userRole != null && userName != null) {
         $("#btnLogin").hide();
         $("#btnLogout").show();
@@ -30,11 +77,7 @@ $(document).ready(function () {
         $("#btnLogin").show();
         $("#btnLogout").hide();
     }
-    if (userRole === 'User') {
-        $('#btnCreate').hide();
-    } else {
-        $('#btnCreate').show();
-    }
+
 });
 
 function GetUserRole(token) {
@@ -54,7 +97,6 @@ function GetUserName(token) {
             const payload = JSON.parse(atob(parts[1].replace(/-/g, "+").replace(/_/g, "/")));
             return payload;
         } catch (error) {
-            console.error("Invalid token:", error);
             return null;
         }
     }
@@ -165,67 +207,24 @@ $(document).ready(function () {
         });
     });
 });
+function checkUserRole() {
+    var token = localStorage.getItem('token');
 
-$(document).ready(function () {
-    checkUserRole();
-
-    $('.cartt').on('click', function (e) {
-        e.preventDefault();
-        var token = localStorage.getItem('token');
-        if (!token) {
-           // alert('You need to log in first.');
-            return;
-        }
-
-        //var decodedToken = decodeToken(token);
-        //var userRole = decodedToken
-        //    ? decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
-        //    : null;
-        //if (userRole !== 'Member') {
-        //    alert('You do not have permission to perform this action.');
-        //    return;
-        //}
-
-        //$.ajax({
-        //    url: '/api/Cart/Add222',
-        //    type: 'POST',
-        //    headers: {
-        //        'Authorization': 'Bearer ' + token
-        //    },
-        //    data: JSON.stringify({ productId: 123, quantity: 1 }),
-        //    contentType: 'application/json',
-        //    success: function (response) {
-        //        if (response.success) {
-        //            alert('Item added to cart!');
-        //        } else {
-        //            alert('Failed to add item to cart.');
-        //        }
-        //    },
-        //    error: function () {
-        //        alert('An error occurred.');
-        //    }
-        //});
-    });
-
-    function checkUserRole() {
-        var token = localStorage.getItem('token');
-
-        if (!token) {
-            console.log('No token found.');
-            return;
-        }
-        var decodedToken = decodeToken(token);
-        var userRole = decodedToken
-            ? decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
-            : null;
-
-        if (userRole === 'User') {
-            $('.cartt').prop('disabled', false);
-        } else {
-            console.log('Unauthorized user role:', userRole);
-        }
+    if (!token) {
+        console.log('No token found.');
+        return;
     }
-});
+    var decodedToken = decodeToken(token);
+    var userRole = decodedToken
+        ? decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
+        : null;
+
+    if (userRole === 'User') {
+        $('.cartt').prop('disabled', false);
+    } else {
+        console.log('Unauthorized user role:', userRole);
+    }
+}
 
 
 $(document).ready(function () {
@@ -491,7 +490,7 @@ $(document).ready(function () {
                         Discount: item.discount || 0
                     };
                 });
-                console.log(orderDetails)
+
                 $.ajax({
                     url: 'https://localhost:7013/api/OrderDetails',
                     method: 'POST',
@@ -503,7 +502,7 @@ $(document).ready(function () {
                     success: function () {
                         alert('Order placed successfully!');
                         localStorage.removeItem('cart');
-                        cart = []; 
+                        cart = [];
                         updateCart();
                     },
                     error: function () {
