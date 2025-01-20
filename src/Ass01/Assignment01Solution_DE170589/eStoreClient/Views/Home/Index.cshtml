@@ -34,6 +34,9 @@
         Create Product
     </a>
 </p>
+<p>
+    <button id="myOrderBtn" class="btn btn-primary">My Orders</button>
+</p>
 
 <div class="container">
     <table class="table">
@@ -66,7 +69,7 @@
                         </a>
                     </td>
                     <td>
-                        <a id="editBtn" data-product-id="@product.ProductId" style="display: inline-block; margin-right: 10px;">
+                        <a class="editBtn" data-product-id="@product.ProductId" style="display: inline-block; margin-right: 10px;">
                             <i class="fas fa-edit"></i>
                         </a>
                         <a class="deleteBtn" data-product-id="@product.ProductId" style="display: inline-block">
@@ -78,6 +81,7 @@
         </tbody>
     </table>
 </div>
+
 <!--Shopinng cart-->
 <div class="container mt-5">
     <h3>Shopping Cart</h3>
@@ -90,6 +94,32 @@
         </ul>
         <p>Total: <span class="text-danger" id="totalAmount">0</span></p>
         <button id="checkoutBtn" class="btn btn-success">Checkout</button>
+    </div>
+</div>
+<!-- Order Items -->
+<div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="orderModalLabel">My Orders</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead class="text-danger">
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Unit Price</th>
+                            <th>Quantity</th>
+                            <th>Total Price</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orderTableBody">
+                 
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 
