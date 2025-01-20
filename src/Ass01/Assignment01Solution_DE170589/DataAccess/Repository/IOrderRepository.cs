@@ -10,7 +10,7 @@ namespace DataAccess.Repository
     public interface IOrderRepository
     {
         public IEnumerable<Order> GetAllOrders();
-        public void AddOrder(Order od);
+        public int AddOrder(Order od);
         public IEnumerable<Order> GetOrderByMemberId(int id);
         public IEnumerable<Order> GetOrderByOrderDate(DateOnly date, int memberID);
     }

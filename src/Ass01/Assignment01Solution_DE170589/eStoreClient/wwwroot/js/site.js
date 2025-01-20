@@ -169,44 +169,42 @@ $(document).ready(function () {
 $(document).ready(function () {
     checkUserRole();
 
-    $('#addToCartBtn').on('click', function (e) {
+    $('.cartt').on('click', function (e) {
         e.preventDefault();
         var token = localStorage.getItem('token');
-        console.log(token)
         if (!token) {
-            console.log(1)
-            alert('You need to log in first.');
+           // alert('You need to log in first.');
             return;
         }
 
-        var decodedToken = decodeToken(token);
-        var userRole = decodedToken
-            ? decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
-            : null;
-        if (userRole !== 'Member') {
-            alert('You do not have permission to perform this action.');
-            return;
-        }
+        //var decodedToken = decodeToken(token);
+        //var userRole = decodedToken
+        //    ? decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
+        //    : null;
+        //if (userRole !== 'Member') {
+        //    alert('You do not have permission to perform this action.');
+        //    return;
+        //}
 
-        $.ajax({
-            url: '/api/Cart/Add222',
-            type: 'POST',
-            headers: {
-                'Authorization': 'Bearer ' + token
-            },
-            data: JSON.stringify({ productId: 123, quantity: 1 }),
-            contentType: 'application/json',
-            success: function (response) {
-                if (response.success) {
-                    alert('Item added to cart!');
-                } else {
-                    alert('Failed to add item to cart.');
-                }
-            },
-            error: function () {
-                alert('An error occurred.');
-            }
-        });
+        //$.ajax({
+        //    url: '/api/Cart/Add222',
+        //    type: 'POST',
+        //    headers: {
+        //        'Authorization': 'Bearer ' + token
+        //    },
+        //    data: JSON.stringify({ productId: 123, quantity: 1 }),
+        //    contentType: 'application/json',
+        //    success: function (response) {
+        //        if (response.success) {
+        //            alert('Item added to cart!');
+        //        } else {
+        //            alert('Failed to add item to cart.');
+        //        }
+        //    },
+        //    error: function () {
+        //        alert('An error occurred.');
+        //    }
+        //});
     });
 
     function checkUserRole() {
@@ -400,4 +398,124 @@ $(document).ready(function () {
             alert("Product not deleted.");
         }
     });
+});
+
+
+// Checkout
+$(document).ready(function () {
+    let cart = [];
+    function updateCart() {
+        const cartContainer = $("#cartContainer");
+        const cartSummary = $("#cartSummary");
+        const cartItems = $("#cartItems");
+        const totalAmount = $("#totalAmount");
+
+        if (cart.length === 0) {
+            cartContainer.html("<p>Your cart is empty</p>");
+            cartSummary.hide();
+        } else {
+            cartContainer.html("<p>Click on 'Add to cart' to add products.</p>");
+            cartSummary.show();
+
+            cartItems.empty();
+            let total = 0;
+
+            $.each(cart, function (index, item) {
+                cartItems.append(`<li>${item.productName} - Quantity: ${item.quantity} - $${(item.unitPrice * item.quantity).toFixed(2)}</li>`);
+                total += item.unitPrice * item.quantity;
+            });
+
+            totalAmount.text(total.toFixed(2));
+        }
+    }
+
+    $(".cartt").on("click", function (event) {
+        const productRow = $(this).closest('tr');
+        const productId = productRow.find('a.deleteBtn').data('productId');
+        const productName = productRow.find('td:nth-child(1)').text();
+        const unitPrice = parseFloat(productRow.find('td:nth-child(5)').text());
+        const quantity = parseInt(productRow.find('input[name="quanProduct"]').val());
+
+        let existingProduct = cart.find(item => item.productId == productId);
+        if (existingProduct) {
+            existingProduct.quantity += quantity;
+        } else {
+            cart.push({ productId, productName, unitPrice, quantity });
+        }
+
+        updateCart();
+    });
+
+
+    $("#checkoutBtn").on("click", function () {
+        if (cart.length === 0) {
+            alert("Your cart is empty!");
+            return;
+        }
+        var token = localStorage.getItem('token');
+
+        if (!token) {
+            alert("Token not found! Please log in.");
+            return;
+        }
+        var decodedToken = decodeToken(token);
+        if (decodedToken === null) {
+            alert("Failed to decode the token.");
+            return;
+        }
+        var memberId = parseInt(decodedToken["Id"], 10);
+        const orderData = {
+            MemberId: memberId,
+            OrderDate: new Date().toISOString(),
+            RequiredDate: new Date(new Date().setDate(new Date().getDate() + 2)).toISOString(),
+            ShippedDate: new Date(new Date().setDate(new Date().getDate() + 3)).toISOString(),
+            Freight: 1
+        };
+
+        $.ajax({
+            url: 'https://localhost:7013/api/Order',
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify(orderData),
+            success: function (orderResponse) {
+                const orderId = orderResponse.id;
+                const orderDetails = $.map(cart, function (item) {
+                    return {
+                        OrderId: orderId,
+                        ProductId: item.productId,
+                        UnitPrice: item.unitPrice,
+                        Quantity: item.quantity,
+                        Discount: item.discount || 0
+                    };
+                });
+                console.log(orderDetails)
+                $.ajax({
+                    url: 'https://localhost:7013/api/OrderDetails',
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify(orderDetails),
+                    success: function () {
+                        alert('Order placed successfully!');
+                        localStorage.removeItem('cart');
+                        cart = []; 
+                        updateCart();
+                    },
+                    error: function () {
+                        alert('Error while saving order details.');
+                    }
+                });
+            },
+            error: function () {
+                alert('Error while creating order.');
+            }
+        });
+    });
+
+    updateCart();
 });

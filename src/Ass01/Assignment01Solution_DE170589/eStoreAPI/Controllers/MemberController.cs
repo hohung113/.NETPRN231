@@ -33,7 +33,7 @@ namespace eStoreAPI.Controllers
                 isAdmin = memberRepository.LoginAdmin(email, password);
                 if (isAdmin)
                 {
-                    token = _jwtService.GenerateToken(email);
+                    token = _jwtService.GenerateToken(email, 99999); // asume
                     return Ok(new { Token = token });
                 }
             }
@@ -47,7 +47,7 @@ namespace eStoreAPI.Controllers
 
             if (isValidPassword)
             {
-                token = _jwtService.GenerateToken(email);
+                token = _jwtService.GenerateToken(email, mem.MemberId);
 
                 //Response.Cookies.Append("AuthToken", token, new CookieOptions
                 //{

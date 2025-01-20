@@ -15,14 +15,15 @@ namespace eStoreAPI.JWTServices
             _configuration = configuration;
             _secretKey = _configuration["JwtSettings:SecretKey"];
         }
-        public string GenerateToken(string username)
+        public string GenerateToken(string username,int userID)
         {
 
             var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, username),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(ClaimTypes.Role, "User")
+                    new Claim(ClaimTypes.Role, "User"),
+                    new Claim("Id", userID.ToString())
                 };
 
             if (username.Equals(_configuration["AdminAccount:Email"]))

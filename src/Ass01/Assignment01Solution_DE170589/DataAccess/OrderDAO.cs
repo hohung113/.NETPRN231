@@ -48,18 +48,21 @@ namespace DataAccess
             var orders = _context.Orders.Include(x => x.OrderDetails).ToList();
             return orders.Any() ? orders : Enumerable.Empty<Order>();
         }
-        public void AddOrder(Order od)
+        public int AddOrder(Order od)
         {
             ArgumentNullException.ThrowIfNull(od, nameof(od));
+
             try
             {
                 _context.Orders.Add(od);
                 _context.SaveChanges();
+                return od.OrderId; 
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while adding the orders.", ex);
+                throw new Exception("An error occurred while adding the order.", ex);
             }
         }
+
     }
 }

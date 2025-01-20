@@ -2,6 +2,7 @@
 using DataAccess.Repository;
 using eStoreAPI.Dtos;
 using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,8 +41,8 @@ namespace eStoreAPI.Controllers
         public IActionResult AddOrder(OrderDTO orderDTO)
         {
             var order = orderDTO.Adapt<Order>();
-            repository.AddOrder(order);
-            return NoContent();
+            int orderId = repository.AddOrder(order);
+            return Ok(new { id = orderId });
         }
     }
 }

@@ -78,6 +78,21 @@
         </tbody>
     </table>
 </div>
+<!--Shopinng cart-->
+<div class="container mt-5">
+    <h3>Shopping Cart</h3>
+    <div id="cartContainer">
+        <p>Your cart is empty</p>
+    </div>
+    <div id="cartSummary" style="display:none;">
+        <h4>Cart Summary</h4>
+        <ul id="cartItems" class="text-danger">
+        </ul>
+        <p>Total: <span class="text-danger" id="totalAmount">0</span></p>
+        <button id="checkoutBtn" class="btn btn-success">Checkout</button>
+    </div>
+</div>
+
 <!-- Modal Login -->
 <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
     <div class="modal-dialog">

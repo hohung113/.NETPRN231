@@ -9,7 +9,7 @@ namespace DataAccess.Repository
 {
     public class OrderRepository : IOrderRepository
     {
-        public void AddOrder(Order od)  => OrderDAO.Instance.AddOrder(od);
+        public int AddOrder(Order od)  => OrderDAO.Instance.AddOrder(od);
 
         public IEnumerable<Order> GetAllOrders() => OrderDAO.Instance.GetAllOrders();
 
