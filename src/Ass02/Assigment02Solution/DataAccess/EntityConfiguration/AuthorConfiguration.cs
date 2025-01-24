@@ -14,6 +14,11 @@ namespace DataAccess.EntityConfiguration
         {
             builder.ToTable("Author");
             builder.HasKey(x => x.Id);
+
+            builder.HasMany(x => x.BookAuthors)
+                .WithOne(x => x.Author)
+                .HasForeignKey(y => y.AuthorId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
